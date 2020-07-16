@@ -1,4 +1,5 @@
-﻿using SubterfugeCore.Core.Network;
+﻿using System;
+using SubterfugeCore.Core.Network;
 using SubterfugeCore.Core.Players;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,7 +11,7 @@ namespace Login
     {
         public Text username;
 
-        public Text password;
+        public InputField password;
 
         public Text loginInfo;
         // Start is called before the first frame update
