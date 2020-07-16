@@ -34,7 +34,6 @@ public class LoadAvaliableRooms : MonoBehaviour
 
         if (roomResponse.IsSuccessStatusCode())
         {
-
             foreach (GameRoom room in roomResponse.Response.array)
             {
                 // Create a new templated item
@@ -44,12 +43,19 @@ public class LoadAvaliableRooms : MonoBehaviour
                 scrollItem.GetComponent<Button>().onClick.AddListener(delegate { GoToGameLobby(room); });
 
                 // Set the text
-                Text text = scrollItem.GetComponentInChildren<Text>();
-                if (text != null)
+                Text misc = scrollItem.transform.Find("Misc").GetComponent<Text>();
+                Text playerCount = scrollItem.transform.Find("PlayerCount").GetComponent<Text>();
+                Text anonimity = scrollItem.transform.Find("Anonimity").GetComponent<Text>();
+                Text roomTitle = scrollItem.transform.Find("RoomTitle").GetComponent<Text>();
+
+                playerCount.text = "Players: " + room.Players.Count + "/" + room.MaxPlayers;
+                anonimity.text = room.Anonimity ? "Anonymous: yes" : "Anonymous: no";
+                roomTitle.text = room.Description;
+                
+                if (misc != null)
                 {
-                    text.text = "[ GameId: " + room.Room_Id + " Title: " + room.Description + ", Seed: " + room.Seed +
-                                ", Players: " + room.Players.Count + "/" + room.MaxPlayers + ", Anonymous: " +
-                                room.Anonimity + ", Created By: " + room.CreatorId + "]";
+                    misc.text = "GameId: " + room.Room_Id + ", Seed: " + room.Seed
+                                 + ", Created By: " + room.CreatorId;
                 }
                 else
                 {
