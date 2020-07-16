@@ -53,6 +53,8 @@ namespace Login
                 ApplicationState.player = new Player(response.Response.User);
                 
                 // Go to the main menu.
+                PlayerPrefs.SetString("username", username.text);
+                PlayerPrefs.SetString("password", password.text);
                 PlayerPrefs.SetString("token", response.Response.Token);
                 SceneManager.LoadScene("MainMenu");
             }
