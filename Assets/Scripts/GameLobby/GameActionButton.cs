@@ -14,10 +14,10 @@ public class GameActionButton : MonoBehaviour
     {
         // Determine if the current user is the creator of the game
         GameRoom room = ApplicationState.currentGameRoom;
-        if (room.creator_id == ApplicationState.player.getId())
+        if (room.CreatorId == ApplicationState.player.GetId())
         {
             // Determine if there are more players than just the creator.
-            if (room.players.Count > 1)
+            if (room.Players.Count > 1)
             {
                 // Show start game early button.
                 Text buttonText = actionButton.GetComponentInChildren<Text>();
@@ -35,9 +35,9 @@ public class GameActionButton : MonoBehaviour
         else
         {
             bool isInGame = false;
-            foreach(NetworkUser player in room.players)
+            foreach(NetworkUser player in room.Players)
             {
-                if (!isInGame && player.id == ApplicationState.player.getId())
+                if (!isInGame && player.Id == ApplicationState.player.GetId())
                 {
                     isInGame = true;
                 }
@@ -62,29 +62,41 @@ public class GameActionButton : MonoBehaviour
 
     public async void onJoinLobby()
     {
-        Api api = GetComponent<Api>();
-        JoinLobbyResponse joinResponse = await api.JoinLobby(ApplicationState.currentGameRoom.room_id);
-        NetworkUser user = new NetworkUser();
-        user.id = ApplicationState.player.getId();
-        user.name = ApplicationState.player.getPlayerName();
+        Api api = new Api();
+        NetworkResponse<JoinLobbyResponse> joinResponse = await api.JoinLobby(ApplicationState.currentGameRoom.RoomId);
+
+        if (joinResponse.IsSuccessStatusCode())
+        {
+            NetworkUser user = new NetworkUser();
+            user.Id = ApplicationState.player.GetId();
+            user.Name = ApplicationState.player.GetPlayerName();
         
-        ApplicationState.currentGameRoom.players.Add(user);
+            ApplicationState.currentGameRoom.Players.Add(user);
         
-        // Reload the scene to update lobby.
-        SceneManager.LoadScene("GameLobby");
+            // Reload the scene to update lobby.
+            SceneManager.LoadScene("GameLobby");   
+        }
+        else
+        {
+            // TODO: Add some text to notify the user they are offline.
+            // Potentially add the user's request to a queue that gets attempted when they regain connectivity.
+        }
     }
     
     public async void onStartEarly()
     {
-        Api api = GetComponent<Api>();
-        StartLobbyEarlyResponse startEarlyResponse = await api.StartLobbyEarly(ApplicationState.currentGameRoom.room_id);
+        Api api = new Api();
+        NetworkResponse<StartLobbyEarlyResponse> startEarlyResponse = await api.StartLobbyEarly(ApplicationState.currentGameRoom.RoomId);
 
-        if (startEarlyResponse.success == true)
+        if (startEarlyResponse.IsSuccessStatusCode())
         {
             SceneManager.LoadScene("Game");
         }
         else
         {
+            // TODO: Tell the user that they are offline or send the error message.
+            // If offline, potentailly add their request to a queue.
+            
             // Reload the scene to update lobby. Handle error here.
             SceneManager.LoadScene("GameLobby");
         }

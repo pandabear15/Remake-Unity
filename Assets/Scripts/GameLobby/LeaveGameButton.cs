@@ -13,9 +13,9 @@ public class LeaveGameButton : MonoBehaviour
     {
         //Determine if the user in in the game.
         bool isInGame = false;
-        foreach(NetworkUser player in ApplicationState.currentGameRoom.players)
+        foreach(NetworkUser player in ApplicationState.currentGameRoom.Players)
         {
-            if (!isInGame && player.id == ApplicationState.player.getId())
+            if (!isInGame && player.Id == ApplicationState.player.GetId())
             {
                 isInGame = true;
             }
@@ -25,7 +25,7 @@ public class LeaveGameButton : MonoBehaviour
         {
             // Determine if the current user is the creator of the game
             GameRoom room = ApplicationState.currentGameRoom;
-            if (room.creator_id == ApplicationState.player.getId())
+            if (room.CreatorId == ApplicationState.player.GetId())
             {
                 Text buttonText = leaveButton.GetComponentInChildren<Text>();
                 buttonText.text = "Delete Lobby";
@@ -45,11 +45,18 @@ public class LeaveGameButton : MonoBehaviour
 
     public async void onLeaveLobby()
     {
-        Api api = GetComponent<Api>();
-        LeaveLobbyResponse leaveResponse = await api.LeaveLobby(ApplicationState.currentGameRoom.room_id);
-        
-        // Reload the scene to update lobby.
-        ApplicationState.currentGameRoom = null;
-        SceneManager.LoadScene("GameSelect");
+        Api api = new Api();
+        NetworkResponse<LeaveLobbyResponse> leaveResponse = await api.LeaveLobby(ApplicationState.currentGameRoom.RoomId);
+
+        if (leaveResponse.IsSuccessStatusCode())
+        {
+            // Reload the scene to update lobby.
+            ApplicationState.currentGameRoom = null;
+            SceneManager.LoadScene("GameSelect");
+        }
+        else
+        {
+            // TODO: Add some text to tell the user they are offline.
+        }
     }
 }
