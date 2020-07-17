@@ -14,7 +14,7 @@
         Generic_Button_Back,
         Generic_Button_Cancel,
         Generic_Button_Submit,
-        
+
         // Login Scene Strings
         Login_Label_Username,
         Login_Label_Password,
@@ -39,7 +39,7 @@
         MainMenu_Button_Help,
         MainMenu_Button_Puzzles,
         MainMenu_Button_Account,
-        
+
         // Game Select Scene
         GameSelect_Label_Title,
         GameSelect_Button_Ongoing,
@@ -47,6 +47,8 @@
         GameSelect_Button_Ended,
         GameSelect_Button_Players,
         GameSelect_Button_CreateGame,
+        Gameselect_Mainmenu_Button_Back,
+        Gameselect_Button_Leaderboard,
         
         // Create Game
         CreateGame_Title_CreateGame,

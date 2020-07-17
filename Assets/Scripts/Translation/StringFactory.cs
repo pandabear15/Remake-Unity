@@ -91,12 +91,14 @@ namespace Translation
             Strings[GameString.Game_GuiPanel_Statistics] = "Stats";
             Strings[GameString.GameLobby_Label_Anonymous] = "Anonymous";
             Strings[GameString.GameLobby_Label_Title] = "Title";
-            Strings[GameString.GameSelect_Button_Ended] = "Ended";
-            Strings[GameString.GameSelect_Button_Ongoing] = "Ongoing";
-            Strings[GameString.GameSelect_Button_Open] = "Open";
+            Strings[GameString.GameSelect_Button_Ended] = "PAST\nGAMES";
+            Strings[GameString.GameSelect_Button_Ongoing] = "YOUR\nGAMES";
+            Strings[GameString.GameSelect_Button_Open] = "OPEN\nGAMES";
             Strings[GameString.GameSelect_Button_Players] = "Players";
             Strings[GameString.GameSelect_Label_Title] = "Title";
             Strings[GameString.Login_Button_CreateAccount] = "Create Account";
+            Strings[GameString.Gameselect_Mainmenu_Button_Back] = "< Main Menu";
+            Strings[GameString.Gameselect_Button_Leaderboard] = "Leaderboard";
 
             // TODO: Change this string based on username and password requirements
             Strings[GameString.Login_Error_InputError] = "TODO: Change this based on input requirements";
