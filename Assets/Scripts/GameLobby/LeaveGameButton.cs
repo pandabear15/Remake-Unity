@@ -26,7 +26,7 @@ public class LeaveGameButton : MonoBehaviour
         {
             // Determine if the current user is the creator of the game
             GameRoom room = ApplicationState.currentGameRoom;
-            if (room.CreatorId == ApplicationState.player.GetId())
+            if (room.Creator_Id == ApplicationState.player.GetId())
             {
                 Text buttonText = leaveButton.GetComponentInChildren<Text>();
                 buttonText.text = StringFactory.GetString(GameString.GameLobby_Button_CancelGame);

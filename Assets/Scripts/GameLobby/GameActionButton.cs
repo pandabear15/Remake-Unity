@@ -15,7 +15,7 @@ public class GameActionButton : MonoBehaviour
     {
         // Determine if the current user is the creator of the game
         GameRoom room = ApplicationState.currentGameRoom;
-        if (room.CreatorId == ApplicationState.player.GetId())
+        if (room.Creator_Id == ApplicationState.player.GetId())
         {
             // Determine if there are more players than just the creator.
             if (room.Players.Count > 1)

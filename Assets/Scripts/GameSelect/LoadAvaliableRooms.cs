@@ -8,7 +8,9 @@ using UnityEngine.UI;
 
 public class LoadAvaliableRooms : MonoBehaviour
 {
-
+    public VerticalLayoutGroup vGroup;
+    public HorizontalLayoutGroup hGroup;
+    public Button joinButton;
     public GameRoomButton scrollItemTemplate;
     Api api = new Api();
 
@@ -36,7 +38,13 @@ public class LoadAvaliableRooms : MonoBehaviour
         {
             foreach (GameRoom room in roomResponse.Response.array)
             {
+                HorizontalLayoutGroup newGroup = Instantiate(hGroup);
+                newGroup.gameObject.SetActive(true);
+
                 // Create a new templated item
+                Button join = Instantiate(joinButton);
+                join.gameObject.SetActive(true);
+
                 GameRoomButton scrollItem = (GameRoomButton) Instantiate(scrollItemTemplate);
                 scrollItem.gameObject.SetActive(true);
                 scrollItem.room = room;
@@ -45,17 +53,26 @@ public class LoadAvaliableRooms : MonoBehaviour
                 // Set the text
                 Text misc = scrollItem.transform.Find("Misc").GetComponent<Text>();
                 Text playerCount = scrollItem.transform.Find("PlayerCount").GetComponent<Text>();
-                Text anonimity = scrollItem.transform.Find("Anonimity").GetComponent<Text>();
                 Text roomTitle = scrollItem.transform.Find("RoomTitle").GetComponent<Text>();
+                Image anon = scrollItem.transform.Find("Anonymity").GetComponent<Image>();
+                Text ratedNumber = scrollItem.transform.Find("RatedNumber").GetComponent<Text>();
+                Text goalNumber = scrollItem.transform.Find("GoalNumber").GetComponent<Text>();
 
-                playerCount.text = "Players: " + room.Players.Count + "/" + room.MaxPlayers;
-                anonimity.text = room.Anonimity ? "Anonymous: yes" : "Anonymous: no";
+                playerCount.text = room.Players.Count + " of " + room.Max_Players + " present";
                 roomTitle.text = room.Description;
+                ratedNumber.text = room.Rated ? room.Min_Rating.ToString() : "All";
+                goalNumber.text = "G:" + room.Goal.ToString();
                 
+                if(room.Anonymity)
+                    anon.gameObject.SetActive(true);
+                else
+                    anon.gameObject.SetActive(false);
+
+
                 if (misc != null)
                 {
                     misc.text = "GameId: " + room.Room_Id + ", Seed: " + room.Seed
-                                 + ", Created By: " + room.CreatorId;
+                                 + ", Created By: " + room.Creator_Id;
                 }
                 else
                 {
@@ -63,7 +80,9 @@ public class LoadAvaliableRooms : MonoBehaviour
                 }
 
                 // Set the button's parent to the scroll item template.
-                scrollItem.transform.SetParent(scrollItemTemplate.transform.parent, false);
+                join.transform.SetParent(newGroup.transform, false);
+                scrollItem.transform.SetParent(newGroup.transform, false);
+                newGroup.transform.SetParent(hGroup.transform.parent, false);
 
             }
 
@@ -101,8 +120,8 @@ public class LoadAvaliableRooms : MonoBehaviour
                 if (text != null)
                 {
                     text.text = "[ GameId: " + room.Room_Id + " Title: " + room.Description + ", Seed: " + room.Seed +
-                                ", Players: " + room.Players.Count + "/" + room.MaxPlayers + ", Anonymous: " +
-                                room.Anonimity + ", Created By: " + room.CreatorId + "]";
+                                ", Players: " + room.Players.Count + "/" + room.Max_Players + ", Anonymous: " +
+                                room.Anonymity + ", Created By: " + room.Creator_Id + "]";
                 }
                 else
                 {
