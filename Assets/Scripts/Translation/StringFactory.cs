@@ -97,7 +97,7 @@ namespace Translation
             Strings[GameString.GameSelect_Button_Players] = "Players";
             Strings[GameString.GameSelect_Label_Title] = "Title";
             Strings[GameString.Login_Button_CreateAccount] = "Create Account";
-            
+
             // TODO: Change this string based on username and password requirements
             Strings[GameString.Login_Error_InputError] = "TODO: Change this based on input requirements";
             Strings[GameString.Login_Error_InvalidCredentials] = "Invalid username or password";

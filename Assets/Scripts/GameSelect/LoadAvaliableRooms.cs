@@ -8,9 +8,11 @@ using UnityEngine.UI;
 
 public class LoadAvaliableRooms : MonoBehaviour
 {
-    public VerticalLayoutGroup vGroup;
     public HorizontalLayoutGroup hGroup;
+    public HorizontalLayoutGroup bottomGroup;
     public Button joinButton;
+    public Button bPub;
+    public Button bPriv;
     public GameRoomButton scrollItemTemplate;
     Api api = new Api();
 
@@ -85,6 +87,17 @@ public class LoadAvaliableRooms : MonoBehaviour
                 newGroup.transform.SetParent(hGroup.transform.parent, false);
 
             }
+
+            HorizontalLayoutGroup bottomLayoutGroup = Instantiate(bottomGroup);
+            bottomLayoutGroup.gameObject.SetActive(true);
+            Button pub = Instantiate(bPub);
+            pub.gameObject.SetActive(true);
+            Button priv = Instantiate(bPriv);
+            priv.gameObject.SetActive(true);
+
+            pub.transform.SetParent(bottomLayoutGroup.transform, false);
+            priv.transform.SetParent(bottomLayoutGroup.transform, false);
+            bottomLayoutGroup.transform.SetParent(bottomGroup.transform.parent, false);
 
             // TODO: Add some text to notify user they are offline.
         }
