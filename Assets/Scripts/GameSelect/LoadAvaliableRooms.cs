@@ -24,6 +24,7 @@ public class LoadAvaliableRooms : MonoBehaviour
     
     public Sprite cancel;
     public Sprite resign;
+    public Sprite leave;
 
     public Color activeButtonSelector = Color.white;
     public Color inactiveButtonSelector = new Color32(219, 212, 212, 255);
@@ -170,15 +171,20 @@ public class LoadAvaliableRooms : MonoBehaviour
 
                 // Set context (resign, cancel, leave) depending on room status
                 Image roomContext = btnContextAction.transform.Find("Context").GetComponent<Image>();
-                if (room.Status.Equals("open"))
+                if (room.Status.Equals("ongoing"))
+                {
+                    roomContext.overrideSprite = resign;
+                    contextText.text = "resign";
+                }
+                else if(room.Status.Equals("open") && room.Creator_Id == ApplicationState.player.GetId())
                 {
                     roomContext.overrideSprite = cancel;
                     contextText.text = "cancel";
                 }
                 else
                 {
-                    roomContext.overrideSprite = resign;
-                    contextText.text = "resign";
+                    roomContext.overrideSprite = leave;
+                    contextText.text = "leave";
                 }
                 
             }
