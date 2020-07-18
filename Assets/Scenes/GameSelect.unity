@@ -591,7 +591,7 @@ GameObject:
   - component: {fileID: 140665855}
   - component: {fileID: 140665856}
   m_Layer: 0
-  m_Name: HorizontalLayout
+  m_Name: RoomContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1506,7 +1506,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -12.35}
-  m_SizeDelta: {x: 33.01, y: 60}
+  m_SizeDelta: {x: 53.39, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &654293669
 MonoBehaviour:
@@ -1561,7 +1561,7 @@ GameObject:
   - component: {fileID: 655706315}
   - component: {fileID: 655706314}
   m_Layer: 0
-  m_Name: Image
+  m_Name: Context
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2584,12 +2584,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad1a1160eb2b83478f5280e34fa1ab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hGroup: {fileID: 140665856}
-  bottomGroup: {fileID: 1898571238}
-  joinButton: {fileID: 1337965499}
-  bPub: {fileID: 474613895}
-  bPriv: {fileID: 1654702252}
-  scrollItemTemplate: {fileID: 1027638289}
+  hlRoomItemTemplate: {fileID: 1898571238}
+  hlCreateRoomTemplate: {fileID: 140665856}
+  btnOpenGames: {fileID: 1833057748}
+  btnOngoingGames: {fileID: 258563945}
+  btnEndedGames: {fileID: 1206222813}
+  btnContextActionTemplate: {fileID: 1337965499}
+  btnCreatePublicGameTemplate: {fileID: 474613895}
+  btnCreatePrivateGameTemplate: {fileID: 1654702252}
+  btnRoomItemTemplate: {fileID: 1027638289}
+  cancel: {fileID: 21300000, guid: c5abc70adaba50347bdec8cf882d6880, type: 3}
+  resign: {fileID: 21300000, guid: e4a683afa92d439479aeef9d41c08cae, type: 3}
+  activeButtonSelector: {r: 1, g: 1, b: 1, a: 1}
+  inactiveButtonSelector: {r: 0.85882354, g: 0.83137256, b: 0.83137256, a: 1}
 --- !u!4 &1180116160
 Transform:
   m_ObjectHideFlags: 0
@@ -3071,7 +3078,7 @@ GameObject:
   - component: {fileID: 1337965500}
   - component: {fileID: 1337965499}
   m_Layer: 0
-  m_Name: RoomJoin
+  m_Name: ContextAction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3997,7 +4004,7 @@ GameObject:
   - component: {fileID: 1898571237}
   - component: {fileID: 1898571238}
   m_Layer: 0
-  m_Name: BottomHorizontalLayout
+  m_Name: CreateRoomContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

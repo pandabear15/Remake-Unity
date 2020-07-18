@@ -1,19 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using SubterfugeCore.Core.Network;
+using SubterfugeCore.Core.Players;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class LoadAvaliableRooms : MonoBehaviour
 {
-    public HorizontalLayoutGroup hGroup;
-    public HorizontalLayoutGroup bottomGroup;
-    public Button joinButton;
-    public Button bPub;
-    public Button bPriv;
-    public GameRoomButton scrollItemTemplate;
+    public HorizontalLayoutGroup hlRoomItemTemplate;
+    public HorizontalLayoutGroup hlCreateRoomTemplate;
+
+    public Button btnOpenGames;
+    public Button btnOngoingGames;
+    public Button btnEndedGames;
+    public Button btnContextActionTemplate;
+    public Button btnCreatePublicGameTemplate;
+    public Button btnCreatePrivateGameTemplate;
+    public GameRoomButton btnRoomItemTemplate;
+    
+    public Sprite cancel;
+    public Sprite resign;
+
+    public Color activeButtonSelector = Color.white;
+    public Color inactiveButtonSelector = new Color32(219, 212, 212, 255);
+
     Api api = new Api();
 
     // Start is called before the first frame update
@@ -24,97 +38,94 @@ public class LoadAvaliableRooms : MonoBehaviour
 
     public async void LoadOpenRooms()
     {
+        // Switch button colors
+        btnOpenGames.GetComponentInChildren<Text>().color = activeButtonSelector;
+        btnOngoingGames.GetComponentInChildren<Text>().color = inactiveButtonSelector;
+        btnEndedGames.GetComponentInChildren<Text>().color = inactiveButtonSelector;
+        
         NetworkResponse<GameRoomResponse> roomResponse = await api.GetOpenRooms();
-
+        
         // Destroy all existing rooms.
-        GameRoomButton[] existingButtons = FindObjectsOfType<GameRoomButton>();
-        foreach (GameRoomButton gameRoomButton in existingButtons)
+        HorizontalLayoutGroup[] existingButtons = FindObjectsOfType<HorizontalLayoutGroup>();
+        foreach (HorizontalLayoutGroup gameRoomButton in existingButtons)
         {
-            if (gameRoomButton.isActiveAndEnabled)
-            {
-                Destroy(gameRoomButton.gameObject);
-            }
+            Destroy(gameRoomButton.gameObject);
         }
 
         if (roomResponse.IsSuccessStatusCode())
         {
             foreach (GameRoom room in roomResponse.Response.array)
             {
-                HorizontalLayoutGroup newGroup = Instantiate(hGroup);
-                newGroup.gameObject.SetActive(true);
+                // Leave Rooms out which you already joined
+                if(room.Players.Exists(x => x.Id == ApplicationState.player.GetId()))
+                    continue;
+                
+                // Create new items from templates
+                HorizontalLayoutGroup hlRoomItem = Instantiate(hlRoomItemTemplate, hlRoomItemTemplate.transform.parent, false);
+                hlRoomItem.gameObject.SetActive(true);
+                
+                Button btnContextAction = Instantiate(btnContextActionTemplate, hlRoomItem.transform, false);
+                btnContextAction.gameObject.SetActive(true);
 
-                // Create a new templated item
-                Button join = Instantiate(joinButton);
-                join.gameObject.SetActive(true);
-
-                GameRoomButton scrollItem = (GameRoomButton) Instantiate(scrollItemTemplate);
-                scrollItem.gameObject.SetActive(true);
-                scrollItem.room = room;
-                scrollItem.GetComponent<Button>().onClick.AddListener(delegate { GoToGameLobby(room); });
+                GameRoomButton btnRoomItem = Instantiate(btnRoomItemTemplate, hlRoomItem.transform, false);
+                btnRoomItem.gameObject.SetActive(true);
+                btnRoomItem.room = room;
+                btnRoomItem.GetComponent<Button>().onClick.AddListener(delegate { GoToGameLobby(room); });
 
                 // Set the text
-                Text misc = scrollItem.transform.Find("Misc").GetComponent<Text>();
-                Text playerCount = scrollItem.transform.Find("PlayerCount").GetComponent<Text>();
-                Text roomTitle = scrollItem.transform.Find("RoomTitle").GetComponent<Text>();
-                Image anon = scrollItem.transform.Find("Anonymity").GetComponent<Image>();
-                Text ratedNumber = scrollItem.transform.Find("RatedNumber").GetComponent<Text>();
-                Text goalNumber = scrollItem.transform.Find("GoalNumber").GetComponent<Text>();
+                Text roomMisc = btnRoomItem.transform.Find("Misc").GetComponent<Text>();
+                Text roomPlayerCount = btnRoomItem.transform.Find("PlayerCount").GetComponent<Text>();
+                Text roomTitle = btnRoomItem.transform.Find("RoomTitle").GetComponent<Text>();
+                Text roomRating = btnRoomItem.transform.Find("RatedNumber").GetComponent<Text>();
+                Text roomGoal = btnRoomItem.transform.Find("GoalNumber").GetComponent<Text>();
 
-                playerCount.text = room.Players.Count + " of " + room.Max_Players + " present";
+                roomPlayerCount.text = room.Players.Count + " of " + room.Max_Players + " present";
                 roomTitle.text = room.Description;
-                ratedNumber.text = room.Rated ? room.Min_Rating.ToString() : "All";
-                goalNumber.text = "G:" + room.Goal.ToString();
-                
+                roomRating.text = room.Rated ? room.Min_Rating.ToString() : "All";
+                roomGoal.text = "G:" + room.Goal;
+                roomMisc.text = "GameId: " + room.Room_Id + ", Seed: " + room.Seed
+                                + ", Created By: " + room.Creator_Id;
+
+                // Set anonymity icon depending on room
+                Image roomAnonymity = btnRoomItem.transform.Find("Anonymity").GetComponent<Image>();
+
                 if(room.Anonymity)
-                    anon.gameObject.SetActive(true);
+                    roomAnonymity.gameObject.SetActive(true);
                 else
-                    anon.gameObject.SetActive(false);
-
-
-                if (misc != null)
-                {
-                    misc.text = "GameId: " + room.Room_Id + ", Seed: " + room.Seed
-                                 + ", Created By: " + room.Creator_Id;
-                }
-                else
-                {
-                    Debug.Log("No Text.");
-                }
-
-                // Set the button's parent to the scroll item template.
-                join.transform.SetParent(newGroup.transform, false);
-                scrollItem.transform.SetParent(newGroup.transform, false);
-                newGroup.transform.SetParent(hGroup.transform.parent, false);
-
+                    roomAnonymity.gameObject.SetActive(false);
+                
             }
 
-            HorizontalLayoutGroup bottomLayoutGroup = Instantiate(bottomGroup);
+            // Create "create rooms" items from templates
+            HorizontalLayoutGroup bottomLayoutGroup = Instantiate(hlCreateRoomTemplate, hlCreateRoomTemplate.transform.parent, false);
             bottomLayoutGroup.gameObject.SetActive(true);
-            Button pub = Instantiate(bPub);
-            pub.gameObject.SetActive(true);
-            Button priv = Instantiate(bPriv);
-            priv.gameObject.SetActive(true);
+            
+            Button btnCreatePublicGame = Instantiate(btnCreatePublicGameTemplate, bottomLayoutGroup.transform, false);
+            btnCreatePublicGame.gameObject.SetActive(true);
+            
+            Button btnCreatePrivateGame = Instantiate(btnCreatePrivateGameTemplate, bottomLayoutGroup.transform, false);
+            btnCreatePrivateGame.gameObject.SetActive(true);
 
-            pub.transform.SetParent(bottomLayoutGroup.transform, false);
-            priv.transform.SetParent(bottomLayoutGroup.transform, false);
-            bottomLayoutGroup.transform.SetParent(bottomGroup.transform.parent, false);
-
+            
             // TODO: Add some text to notify user they are offline.
         }
     }
 
     public async void LoadOngoingRooms()
     {
+        // Switch button colors
+        btnOngoingGames.GetComponentInChildren<Text>().color = activeButtonSelector;
+        btnOpenGames.GetComponentInChildren<Text>().color = inactiveButtonSelector;
+        btnEndedGames.GetComponentInChildren<Text>().color = inactiveButtonSelector;
+        
         NetworkResponse<GameRoomResponse> roomResponse = await api.GetOngoingRooms();
         
         // Destroy all existing rooms.
-        GameRoomButton[] existingButtons = FindObjectsOfType<GameRoomButton>();
-        foreach (GameRoomButton gameRoomButton in existingButtons)
+        HorizontalLayoutGroup[] existingButtons = FindObjectsOfType<HorizontalLayoutGroup>();
+        foreach (HorizontalLayoutGroup gameRoomButton in existingButtons)
         {
-            if (gameRoomButton.isActiveAndEnabled)
-            {
-                Destroy(gameRoomButton.gameObject);
-            }
+
+            Destroy(gameRoomButton.gameObject);
         }
 
         if (roomResponse.IsSuccessStatusCode())
@@ -122,28 +133,63 @@ public class LoadAvaliableRooms : MonoBehaviour
 
             foreach (GameRoom room in roomResponse.Response.array)
             {
-                // Create a new templated item
-                GameRoomButton scrollItem = (GameRoomButton) Instantiate(scrollItemTemplate);
-                scrollItem.gameObject.SetActive(true);
-                scrollItem.room = room;
-                scrollItem.GetComponent<Button>().onClick.AddListener(delegate { GoToGame(room); });
+                // Create new items from templates
+                HorizontalLayoutGroup hlRoomItem = Instantiate(hlRoomItemTemplate, hlRoomItemTemplate.transform.parent, false);
+                hlRoomItem.gameObject.SetActive(true);
+                
+                Button btnContextAction = Instantiate(btnContextActionTemplate, hlRoomItem.transform, false);
+                btnContextAction.gameObject.SetActive(true);
+
+                GameRoomButton btnRoomItem = (GameRoomButton) Instantiate(btnRoomItemTemplate, hlRoomItem.transform, false);
+                btnRoomItem.gameObject.SetActive(true);
+                btnRoomItem.room = room;
+                btnRoomItem.GetComponent<Button>().onClick.AddListener(delegate { GoToGameLobby(room); });
 
                 // Set the text
-                Text text = scrollItem.GetComponentInChildren<Text>();
-                if (text != null)
+                Text roomMisc = btnRoomItem.transform.Find("Misc").GetComponent<Text>();
+                Text roomPlayerCount = btnRoomItem.transform.Find("PlayerCount").GetComponent<Text>();
+                Text roomTitle = btnRoomItem.transform.Find("RoomTitle").GetComponent<Text>();
+                Text roomRating = btnRoomItem.transform.Find("RatedNumber").GetComponent<Text>();
+                Text roomGoal = btnRoomItem.transform.Find("GoalNumber").GetComponent<Text>();
+                Text contextText = btnContextAction.transform.Find("Join").GetComponent<Text>();
+
+
+                roomPlayerCount.text = room.Players.Count + " of " + room.Max_Players + " present";
+                roomTitle.text = room.Description;
+                roomRating.text = room.Rated ? room.Min_Rating.ToString() : "All";
+                roomGoal.text = "G:" + room.Goal.ToString();
+                roomMisc.text = "GameId: " + room.Room_Id + ", Seed: " + room.Seed
+                                + ", Created By: " + room.Creator_Id;
+
+                // Set anonymity icon depending on room
+                Image roomAnonymity = btnRoomItem.transform.Find("Anonymity").GetComponent<Image>();
+                if(room.Anonymity)
+                    roomAnonymity.gameObject.SetActive(true);
+                else
+                    roomAnonymity.gameObject.SetActive(false);
+
+                // Set context (resign, cancel, leave) depending on room status
+                Image roomContext = btnContextAction.transform.Find("Context").GetComponent<Image>();
+                if (room.Status.Equals("open"))
                 {
-                    text.text = "[ GameId: " + room.Room_Id + " Title: " + room.Description + ", Seed: " + room.Seed +
-                                ", Players: " + room.Players.Count + "/" + room.Max_Players + ", Anonymous: " +
-                                room.Anonymity + ", Created By: " + room.Creator_Id + "]";
+                    roomContext.overrideSprite = cancel;
+                    contextText.text = "cancel";
                 }
                 else
                 {
-                    Debug.Log("No Text.");
+                    roomContext.overrideSprite = resign;
+                    contextText.text = "resign";
                 }
-
-                // Set the button's parent to the scroll item template.
-                scrollItem.transform.SetParent(scrollItemTemplate.transform.parent, false);
+                
             }
+            HorizontalLayoutGroup bottomLayoutGroup = Instantiate(hlCreateRoomTemplate, hlCreateRoomTemplate.transform.parent, false);
+            bottomLayoutGroup.gameObject.SetActive(true);
+            
+            Button btnCreatePublicGame = Instantiate(btnCreatePublicGameTemplate, bottomLayoutGroup.transform, false);
+            btnCreatePublicGame.gameObject.SetActive(true);
+            
+            Button btnCreatePrivateGame = Instantiate(btnCreatePrivateGameTemplate, bottomLayoutGroup.transform, false);
+            btnCreatePrivateGame.gameObject.SetActive(true);
         }
         // TODO: Add some text to notify the user that they are offline.
     }

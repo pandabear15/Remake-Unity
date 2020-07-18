@@ -65,3 +65,5 @@ crashlytics-build.properties
 /Assets/_site/*
 /Assets/Documentation/obj/*
 /Assets/Documentation/api/*
+/Assets/lib.meta
+/.idea/
