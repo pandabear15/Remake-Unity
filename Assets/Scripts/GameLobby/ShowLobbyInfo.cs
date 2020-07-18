@@ -16,6 +16,7 @@ public class ShowLobbyInfo : MonoBehaviour
 
     public void displayLobbyInformation()
     {
+        //53B0E2
         GameRoom room = ApplicationState.currentGameRoom;
         lobbyDetails.text = "Room Id: " + room.Room_Id + "\nTitle: " + room.Description + "\nMap: " + room.Map + "\nAnonymous: " + room.Anonymity + "\nCreator: " + room.Creator_Id + "\nGoal: " + room.Goal + "\nRanked: " + room.Rated + "\nMinimum Rank: " + room.Min_Rating + "\nPlayers (" + room.Players.Count + "):";
         foreach (NetworkUser netUser in room.Players)

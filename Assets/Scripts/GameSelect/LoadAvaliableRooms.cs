@@ -186,7 +186,6 @@ public class LoadAvaliableRooms : MonoBehaviour
                     roomContext.overrideSprite = leave;
                     contextText.text = "leave";
                 }
-                
             }
             HorizontalLayoutGroup bottomLayoutGroup = Instantiate(hlCreateRoomTemplate, hlCreateRoomTemplate.transform.parent, false);
             bottomLayoutGroup.gameObject.SetActive(true);

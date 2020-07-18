@@ -10,6 +10,8 @@ public class GameLoader : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // PlayerPrefs.DeleteAll();
+        
         // Set the API url.
         Api api = new Api("http://18.220.154.6");
         
