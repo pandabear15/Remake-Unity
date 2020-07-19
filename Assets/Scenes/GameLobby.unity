@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vlPlayers: {fileID: 684248972}
   vlGameInfo: {fileID: 1154816275}
+  roomDescription: {fileID: 1401766334}
   btnPlayerTemplate: {fileID: 1763198936}
   btnStartNow: {fileID: 437522179}
   btnInviteYourFriends: {fileID: 1568772030}
