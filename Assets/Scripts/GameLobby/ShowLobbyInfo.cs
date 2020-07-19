@@ -9,6 +9,9 @@ public class ShowLobbyInfo : MonoBehaviour
     //public Text lobbyDetails;
     public VerticalLayoutGroup vlPlayers;
     public VerticalLayoutGroup vlGameInfo;
+
+    public Text roomDescription;
+    
     public Button btnPlayerTemplate;
     public Button btnStartNow;
     public Button btnInviteYourFriends;
@@ -23,6 +26,7 @@ public class ShowLobbyInfo : MonoBehaviour
     public void displayLobbyInformation()
     {
         GameRoom room = ApplicationState.currentGameRoom;
+        roomDescription.text = room.Description;
         Text playersPresent = vlGameInfo.transform.Find("Players").GetComponent<Text>();
         playersPresent.text = room.Players.Count + " of " + room.Max_Players + " present (x medals)";
         Text goal = vlGameInfo.transform.Find("Goal").GetComponent<Text>();
