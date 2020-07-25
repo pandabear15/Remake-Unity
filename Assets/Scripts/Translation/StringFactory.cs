@@ -77,7 +77,7 @@ namespace Translation
             Strings[GameString.Login_Button_Login] = "Login";
             Strings[GameString.Login_Error_Unverified] = "Invalid Username or Password";
             Strings[GameString.Login_Label_Password] = "Password";
-            Strings[GameString.Login_Label_Username] = "Username";
+            Strings[GameString.Login_Label_Username] = "Screen name or e-mail";
             Strings[GameString.Register_Button_Register] = "Register";
             Strings[GameString.Register_Label_Email] = "Email";
             Strings[GameString.CreateGame_Label_Anonymous] = "Anonymous";

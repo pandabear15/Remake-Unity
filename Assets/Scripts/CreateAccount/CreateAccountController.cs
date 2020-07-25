@@ -12,7 +12,6 @@ public class CreateAccountController : MonoBehaviour
     public Text username;
     public Text password;
     public Text email;
-    Api api = new Api("http://18.220.154.6/api");
     public Text responseInfo;
     
     public void Start()
@@ -21,10 +20,12 @@ public class CreateAccountController : MonoBehaviour
 
     public async void onRegister()
     {
+        Api api = new Api();
         NetworkResponse<RegisterResponse> response = await api.RegisterAccount(username.text, password.text, email.text);
+
         if (response.IsSuccessStatusCode())
         {
-            ApplicationState.player = new Player(response.Response.User.Id, response.Response.User.Name);
+            ApplicationState.player = new Player(response.Response.User);
             PlayerPrefs.SetString("username", username.text);
             PlayerPrefs.SetString("password", password.text);
             PlayerPrefs.SetString("token", response.Response.Token);
