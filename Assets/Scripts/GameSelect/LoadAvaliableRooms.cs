@@ -144,7 +144,7 @@ public class LoadAvaliableRooms : MonoBehaviour
                 GameRoomButton btnRoomItem = (GameRoomButton) Instantiate(btnRoomItemTemplate, hlRoomItem.transform, false);
                 btnRoomItem.gameObject.SetActive(true);
                 btnRoomItem.room = room;
-                btnRoomItem.GetComponent<Button>().onClick.AddListener(delegate { GoToGameLobby(room); });
+                btnRoomItem.GetComponent<Button>().onClick.AddListener(delegate { GoToGame(room); });
 
                 // Set the text
                 Text roomMisc = btnRoomItem.transform.Find("Misc").GetComponent<Text>();
