@@ -7,7 +7,6 @@ using SubterfugeCore.Core.Entities.Positions;
 using SubterfugeCore.Core.GameEvents;
 using SubterfugeCore.Core.GameEvents.Base;
 using SubterfugeCore.Core.Network;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -25,12 +24,12 @@ public class GameManager : MonoBehaviour
     async void Start()
     {
         launchHud.SetActive(false);
-        NetworkResponse<List<NetworkGameEvent>> gameEvents = await api.GetGameEvents(ApplicationState.currentGameRoom.RoomId);
+        NetworkResponse<GameEventResponse> gameEvents = await api.GetGameEvents(ApplicationState.currentGameRoom.Room_Id);
 
         if (gameEvents.IsSuccessStatusCode())
         {
             // Parse game events here.
-            foreach (NetworkGameEvent gameEvent in gameEvents.Response)
+            foreach (NetworkGameEvent gameEvent in gameEvents.Response.array)
             {
                 // convert to a game event
                 LaunchEvent launch = LaunchEvent.FromJson(gameEvent.EventMsg);
@@ -110,7 +109,7 @@ public class GameManager : MonoBehaviour
     {
         LaunchEvent launchEvent = new LaunchEvent(Game.TimeMachine.CurrentTick, launchOutpost, (int)drillerSlider.value, destinationOutpost);
         Game.TimeMachine.AddEvent(launchEvent);
-        api.SubmitGameEvent(launchEvent, ApplicationState.currentGameRoom.RoomId);
+        api.SubmitGameEvent(launchEvent, ApplicationState.currentGameRoom.Room_Id);
         this.SetLaunchHub(false);
     }
     
