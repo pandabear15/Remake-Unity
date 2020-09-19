@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     async void Start()
     {
         launchHud.SetActive(false);
-        NetworkResponse<GameEventResponse> gameEvents = await api.GetGameEvents(ApplicationState.currentGameRoom.Room_Id);
+        NetworkResponse<GameEventResponse> gameEvents = await api.GetGameEvents(ApplicationState.currentGameRoom.room_id);
 
         if (gameEvents.IsSuccessStatusCode())
         {
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
             foreach (NetworkGameEvent gameEvent in gameEvents.Response.array)
             {
                 // convert to a game event
-                LaunchEvent launch = LaunchEvent.FromJson(gameEvent.EventMsg);
+                LaunchEvent launch = LaunchEvent.FromJson(gameEvent.event_msg);
                 Game.TimeMachine.AddEvent(launch);
             }
         } else {
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
     {
         LaunchEvent launchEvent = new LaunchEvent(Game.TimeMachine.CurrentTick, launchOutpost, (int)drillerSlider.value, destinationOutpost);
         Game.TimeMachine.AddEvent(launchEvent);
-        api.SubmitGameEvent(launchEvent, ApplicationState.currentGameRoom.Room_Id);
+        api.SubmitGameEvent(launchEvent, ApplicationState.currentGameRoom.room_id);
         this.SetLaunchHub(false);
     }
     

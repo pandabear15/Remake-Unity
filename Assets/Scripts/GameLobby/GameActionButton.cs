@@ -15,10 +15,10 @@ public class GameActionButton : MonoBehaviour
     {
         // Determine if the current user is the creator of the game
         GameRoom room = ApplicationState.currentGameRoom;
-        if (room.CreatorId == ApplicationState.player.GetId())
+        if (room.creator == ApplicationState.player.GetId())
         {
             // Determine if there are more players than just the creator.
-            if (room.Players.Count > 1)
+            if (room.players.Count > 1)
             {
                 // Show start game early button.
                 Text buttonText = actionButton.GetComponentInChildren<Text>();
@@ -36,9 +36,9 @@ public class GameActionButton : MonoBehaviour
         else
         {
             bool isInGame = false;
-            foreach(NetworkUser player in room.Players)
+            foreach(NetworkUser player in room.players)
             {
-                if (!isInGame && player.Id == ApplicationState.player.GetId())
+                if (!isInGame && player.id == ApplicationState.player.GetId())
                 {
                     isInGame = true;
                 }
@@ -64,15 +64,15 @@ public class GameActionButton : MonoBehaviour
     public async void onJoinLobby()
     {
         Api api = new Api();
-        NetworkResponse<JoinLobbyResponse> joinResponse = await api.JoinLobby(ApplicationState.currentGameRoom.Room_Id);
+        NetworkResponse<JoinLobbyResponse> joinResponse = await api.JoinLobby(ApplicationState.currentGameRoom.room_id);
 
         if (joinResponse.IsSuccessStatusCode())
         {
             NetworkUser user = new NetworkUser();
-            user.Id = ApplicationState.player.GetId();
-            user.Name = ApplicationState.player.GetPlayerName();
+            user.id = ApplicationState.player.GetId();
+            user.name = ApplicationState.player.GetPlayerName();
         
-            ApplicationState.currentGameRoom.Players.Add(user);
+            ApplicationState.currentGameRoom.players.Add(user);
         
             // Reload the scene to update lobby.
             SceneManager.LoadScene("GameLobby");   
@@ -87,7 +87,7 @@ public class GameActionButton : MonoBehaviour
     public async void onStartEarly()
     {
         Api api = new Api();
-        NetworkResponse<StartLobbyEarlyResponse> startEarlyResponse = await api.StartLobbyEarly(ApplicationState.currentGameRoom.Room_Id);
+        NetworkResponse<StartLobbyEarlyResponse> startEarlyResponse = await api.StartLobbyEarly(ApplicationState.currentGameRoom.room_id);
 
         if (startEarlyResponse.IsSuccessStatusCode())
         {

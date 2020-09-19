@@ -29,10 +29,10 @@ namespace Login
                 if (response.IsSuccessStatusCode())
                 {
                     // Save the player
-                    ApplicationState.player = new Player(response.Response.User);
+                    ApplicationState.player = new Player(response.Response.user);
                 
                     // Go to the main menu.
-                    PlayerPrefs.SetString("token", response.Response.Token);
+                    PlayerPrefs.SetString("token", response.Response.token);
                     SceneManager.LoadScene("MainMenu");
                 }
                 else
@@ -45,14 +45,18 @@ namespace Login
         public async void onLogin()
         {
             Api api = new Api();
+            Debug.Log("Sending login request");
+            Debug.Log(username.text);
+            Debug.Log(password.text);
             NetworkResponse<LoginResponse> response = await api.Login(username.text, password.text);
+            Debug.Log(response.ResponseContent);
             if (response.IsSuccessStatusCode())
             {
                 // Save the player
-                ApplicationState.player = new Player(response.Response.User);
+                ApplicationState.player = new Player(response.Response.user);
                 
                 // Go to the main menu.
-                PlayerPrefs.SetString("token", response.Response.Token);
+                PlayerPrefs.SetString("token", response.Response.token);
                 SceneManager.LoadScene("MainMenu");
             }
             else

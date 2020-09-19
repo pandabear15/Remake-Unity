@@ -24,10 +24,10 @@ public class CreateAccountController : MonoBehaviour
         NetworkResponse<RegisterResponse> response = await api.RegisterAccount(username.text, password.text, email.text);
         if (response.IsSuccessStatusCode())
         {
-            ApplicationState.player = new Player(response.Response.User.Id, response.Response.User.Name);
+            ApplicationState.player = new Player(response.Response.user.id, response.Response.user.name);
             PlayerPrefs.SetString("username", username.text);
             PlayerPrefs.SetString("password", password.text);
-            PlayerPrefs.SetString("token", response.Response.Token);
+            PlayerPrefs.SetString("token", response.Response.token);
             SceneManager.LoadScene("MainMenu");
         }
         else

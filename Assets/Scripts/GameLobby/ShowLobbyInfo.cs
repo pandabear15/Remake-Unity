@@ -17,10 +17,10 @@ public class ShowLobbyInfo : MonoBehaviour
     public void displayLobbyInformation()
     {
         GameRoom room = ApplicationState.currentGameRoom;
-        lobbyDetails.text = "Room Id: " + room.Room_Id + "\nTitle: " + room.Description + "\nMap: " + room.Map + "\nAnonymous: " + room.Anonimity + "\nCreator: " + room.CreatorId + "\nGoal: " + room.Goal + "\nRanked: " + room.Rated + "\nMinimum Rank: " + room.MinRating + "\nPlayers (" + room.Players.Count + "):";
-        foreach (NetworkUser netUser in room.Players)
+        lobbyDetails.text = "Room Id: " + room.room_id + "\nTitle: " + room.description + "\nMap: " + room.map + "\nAnonymous: " + room.anonymity + "\nCreator: " + room.creator + "\nGoal: " + room.goal + "\nRanked: " + room.rated + "\nMinimum Rank: " + room.min_rating + "\nPlayers (" + room.players.Count + "):";
+        foreach (NetworkUser netUser in room.players)
         {
-            lobbyDetails.text = lobbyDetails.text + "\n" + netUser.Name;
+            lobbyDetails.text = lobbyDetails.text + "\n" + netUser.name;
         }
     }
 }
