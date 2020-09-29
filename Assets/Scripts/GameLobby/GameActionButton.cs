@@ -38,6 +38,8 @@ public class GameActionButton : MonoBehaviour
             bool isInGame = false;
             foreach(NetworkUser player in room.players)
             {
+                Debug.unityLogger.Log(ApplicationState.player.GetId());
+                Debug.unityLogger.Log(room.players);
                 if (!isInGame && player.id == ApplicationState.player.GetId())
                 {
                     isInGame = true;
