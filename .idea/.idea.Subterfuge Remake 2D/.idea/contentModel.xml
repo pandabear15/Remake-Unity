@@ -14,9 +14,13 @@
             <e p="GameElements.txt" t="Include" />
           </e>
         </e>
+        <e p="JsonDotNet" t="Include">
+          <e p="link.xml" t="Include" />
+        </e>
         <e p="LaunchModalSourceInformation.cs" t="Include" />
         <e p="lib" t="Include">
-          <e p="Sigil.xml" t="Include" />
+          <e p="SubterfugeCore.AssemblyInfo.cs" t="Include" />
+          <e p="SubterfugeCore.csproj.FileListAbsolute.txt" t="Include" />
         </e>
         <e p="Scripts" t="Include">
           <e p="ApplicationState.cs" t="Include" />
