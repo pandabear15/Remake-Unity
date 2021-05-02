@@ -1,18 +1,24 @@
-﻿using UnityEngine;
+﻿using Rooms.Multiplayer.Game;
+using UnityEngine;
 using SubterfugeCore.Core;
  using SubterfugeCore.Core.Entities.Positions;
- using TMPro;
+using SubterfugeCore.Core.Entities.Specialists;
+using TMPro;
+using UnityEngine.UI;
 
- public class OutpostManager : MonoBehaviour
+public class OutpostManager : MonoBehaviour
 {
 
     private Animator OutpostAnimator;
     public string ID;
     private float downtime;
     private bool expanded = false;
-    private TextMeshPro textMesh;
+    public Image specialistIconPrefab;
 
     public Outpost outpost;
+    public SpriteRenderer visionMask;
+    public TextMeshProUGUI drillerCount;
+    public TextMeshProUGUI outpostName;
 
     public readonly Color subOlive = new Color(0.439f, 0.463f, 0.290f);
     public readonly Color subRed = new Color(0.667f, 0.122f, 0.137f);
@@ -30,37 +36,41 @@ using SubterfugeCore.Core;
     void Start()
     {
         OutpostAnimator = gameObject.GetComponent<Animator>();
-        textMesh = gameObject.GetComponentInChildren<TextMeshPro>();
     }
 
     // Update is called once per frame
     void Update()
     {
         // Set color based on the owner
-        textMesh.text = outpost.GetDrillerCount().ToString();
-        
-        
-        // Determine the outpost vision mask.
-        if (outpost.GetOwner()?.GetId() == ApplicationState.player.GetId())
-        {
-            // Apply vision mask.
-            gameObject.GetComponentInChildren<SpriteMask>().transform.localScale = new Vector3(outpost.getVisionRange() / 15.0f, outpost.getVisionRange() / 15.0f, 1);
-            gameObject.GetComponentInChildren<TextMeshPro>().transform.localScale = new Vector3(1, 1, 1);
-        }
-        else
-        {
-            // remove vision mask.
-            gameObject.GetComponentInChildren<SpriteMask>().transform.localScale = new Vector3(0, 0, 1);
+        drillerCount.text = outpost.GetDrillerCount().ToString();
+        outpostName.text = outpost.Name;
 
-            if (ApplicationState.CurrentGame.TimeMachine.GetState().isInVisionRange(outpost, ApplicationState.player))
+        // Determine if the outpost can be seen by the player.
+        GameState currentState = ApplicationState.CurrentGame.TimeMachine.GetState();
+        
+        if (currentState.isInVisionRange(outpost, ApplicationState.player))
+        {
+            // Only show the vision range if the player owns the outpost.
+            if (outpost.GetOwner()?.GetId() == ApplicationState.player.GetId())
             {
-                gameObject.GetComponentInChildren<TextMeshPro>().transform.localScale = new Vector3(1, 1, 1);
+                // Apply vision mask.
+                visionMask.transform.localScale = new Vector2(outpost.getVisionRange() / 15.0f, outpost.getVisionRange() / 15.0f);
             }
             else
             {
-                gameObject.GetComponentInChildren<TextMeshPro>().transform.localScale = new Vector3(0, 0, 1);
+                visionMask.transform.localScale = new Vector3(0, 0, 1);
             }
+            drillerCount.transform.localScale = new Vector3(1, 1, 1);
         }
+        else
+        {
+            // Hide the vision Mask
+            visionMask.transform.localScale = new Vector3(0, 0, 1);
+            drillerCount.transform.localScale = new Vector3(0, 0, 1);
+            return;
+        }
+
+        PopulateSpecialistInformation();
 
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         int playerId = 0;
@@ -151,5 +161,11 @@ using SubterfugeCore.Core;
         expanded = false;
         OutpostAnimator.ResetTrigger("Expand");
         OutpostAnimator.SetTrigger("Contract");
+    }
+
+    public void PopulateSpecialistInformation()
+    {
+        SpecialistListDisplay specialistListDisplay = GetComponentInChildren<SpecialistListDisplay>();
+        specialistListDisplay.DisplaySpecialists(outpost.GetSpecialistManager().GetSpecialists());
     }
 }

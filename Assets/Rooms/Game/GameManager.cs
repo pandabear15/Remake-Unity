@@ -96,6 +96,9 @@ public class GameManager : MonoBehaviour
     {
         showLaunchHud = state;
         launchHud.SetActive(state);
+        SendSubModal sendSubModal = launchHud.GetComponent<SendSubModal>();
+        sendSubModal.source = launchOutpost;
+        sendSubModal.destination = destinationOutpost;
     }
 
     public void launchSub()

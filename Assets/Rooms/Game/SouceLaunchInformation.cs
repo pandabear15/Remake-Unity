@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Rooms.Multiplayer.Game;
 using SubterfugeCore.Core.Entities;
 using SubterfugeCore.Core.Entities.Positions;
+using SubterfugeCore.Core.Entities.Specialists;
 using SubterfugeCore.Core.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,5 +21,11 @@ public class SouceLaunchInformation : MonoBehaviour
                     "Shields: " + source.GetShieldManager().GetShields() + "\n" +
                     "Drillers: " + source.GetDrillerCount() + "\n" +
                     "Specialists: " + source.GetSpecialistManager().GetSpecialistCount();
+
+        foreach (Specialist s in source.GetSpecialistManager().GetSpecialists())
+        {
+            SpecialistListDisplay specialistListDisplay = GetComponentInChildren<SpecialistListDisplay>();
+            specialistListDisplay.DisplaySpecialists(source.GetSpecialistManager().GetSpecialists());
+        }
     }
 }

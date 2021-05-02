@@ -45,6 +45,10 @@
             <e p="SendSubModal.cs" t="Include" />
             <e p="SouceLaunchInformation.cs" t="Include" />
             <e p="SpecialistCarrier.cs" t="Include" />
+            <e p="SpecialistIcons" t="Include">
+              <e p="SpecialistIconHelper.cs" t="Include" />
+              <e p="SpecialistListDisplay.cs" t="Include" />
+            </e>
             <e p="SubLaunchInformation.cs" t="Include" />
             <e p="SubManager.cs" t="Include" />
             <e p="SubSpawn.cs" t="Include" />

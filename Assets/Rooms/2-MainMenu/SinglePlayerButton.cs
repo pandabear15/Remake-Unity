@@ -28,9 +28,9 @@ public class SinglePlayerButton : MonoBehaviour
         // Setup a single player game.
         List<Player> players = new List<Player>();
         players.Add(ApplicationState.player);
-        players.Add(new Player("2"));
-        players.Add(new Player("3"));
-        players.Add(new Player("4"));
+        players.Add(new Player("2", "Player 2"));
+        players.Add(new Player("3", "Player 3"));
+        players.Add(new Player("4", "Player 4"));
         
         MapConfiguration mapConfiguration = new MapConfiguration(players);
         mapConfiguration.Seed = 169081503;

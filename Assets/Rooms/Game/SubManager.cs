@@ -25,7 +25,44 @@ public class SubManager : MonoBehaviour
         
         int rotationAngle = (int) (sub.GetRotationRadians() * (360 / (2 * Math.PI)) - 90);
         transform.rotation = Quaternion.Euler(0, 0, rotationAngle);
-        
+
+        ColorByOwner();
+        textMesh = gameObject.GetComponentInChildren<TextMeshPro>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        GameTick currentTick = ApplicationState.CurrentGame.TimeMachine.GetCurrentTick();
+        textMesh.text = sub.GetDrillerCount().ToString();
+        if (ApplicationState.CurrentGame.TimeMachine.GetState().SubExists(sub))
+        {
+            // Update the position and rotation of the sub.
+            Vector3 location = new Vector3(sub.GetCurrentPosition(currentTick).X, sub.GetCurrentPosition(currentTick).Y, 0);
+            Transform transform = GetComponent<Transform>();
+            transform.localPosition = location;
+            
+            int rotationAngle = (int) (sub.GetRotationRadians() * (360 / (2 * Math.PI)) - 90);
+            transform.rotation = Quaternion.Euler(0, 0, rotationAngle);
+        }
+        else
+        {
+            /*
+            if ( PrefabUtility.IsPartOfPrefabInstance(transform) )
+            {
+                //if a part of a prefab instance then get the instance handle
+                Object prefabInstance = PrefabUtility.GetPrefabInstanceHandle(transform);
+                //destroy the handle
+                GameObject.DestroyImmediate(prefabInstance);
+            }
+            */
+            //the usual destroy immediate to clean up scene objects
+            GameObject.DestroyImmediate(transform.gameObject,true);
+        }
+    }
+
+    public void ColorByOwner()
+    {
         // Set color based on the owner
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         int playerId = 0;
@@ -59,40 +96,6 @@ public class SubManager : MonoBehaviour
             case 7:
                 renderer.color = Color.black;
                 break;
-        }
-        
-        
-        textMesh = gameObject.GetComponentInChildren<TextMeshPro>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        GameTick currentTick = ApplicationState.CurrentGame.TimeMachine.GetCurrentTick();
-        textMesh.text = sub.GetDrillerCount().ToString();
-        if (ApplicationState.CurrentGame.TimeMachine.GetState().SubExists(sub))
-        {
-            // Update the position and rotation of the sub.
-            Vector3 location = new Vector3(sub.GetCurrentPosition(currentTick).X, sub.GetCurrentPosition(currentTick).Y, 0);
-            Transform transform = GetComponent<Transform>();
-            transform.localPosition = location;
-            
-            int rotationAngle = (int) (sub.GetRotationRadians() * (360 / (2 * Math.PI)) - 90);
-            transform.rotation = Quaternion.Euler(0, 0, rotationAngle);
-        }
-        else
-        {
-            /*
-            if ( PrefabUtility.IsPartOfPrefabInstance(transform) )
-            {
-                //if a part of a prefab instance then get the instance handle
-                Object prefabInstance = PrefabUtility.GetPrefabInstanceHandle(transform);
-                //destroy the handle
-                GameObject.DestroyImmediate(prefabInstance);
-            }
-            */
-            //the usual destroy immediate to clean up scene objects
-            GameObject.DestroyImmediate(transform.gameObject,true);
         }
     }
 }
