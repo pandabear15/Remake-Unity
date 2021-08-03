@@ -6,7 +6,6 @@ using SubterfugeCore.Core.Generation;
 using SubterfugeCore.Core.Players;
 using SubterfugeCore.Core.Topologies;
 using TMPro;
-using UnityEditor.iOS;
 
 public class OutpostSpawn : MonoBehaviour
 {
